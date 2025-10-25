@@ -5,9 +5,8 @@ export default function Index() {
         <Layout>
 
         <div>
-            
-            //
+            reports
         </div>
         </Layout>
-    )
+    );
 }

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ChartBarIcon, PaperClipIcon } from '@heroicons/react/16/solid';
 import { router } from '@inertiajs/react';
-import { BoxIcon, GitBranchPlus, ChevronLeft, ChevronRight, UserRoundCog } from 'lucide-react';
+import { BoxIcon, GitBranchPlus, ChevronLeft, ChevronRight, UserRoundCog, BotIcon } from 'lucide-react';
 
 export default function Sidebar() {
     const [collapsed, setCollapsed] = useState(localStorage.getItem('bar') === '1' ? true : false);
@@ -12,6 +12,7 @@ export default function Sidebar() {
         { name: 'Отчеты', href: route('reports.index'), icon: PaperClipIcon },
         { name: 'Проекты', href: route('projects.index'), icon: GitBranchPlus },
         { name: 'Пользователи', href: route('users.index'), icon: UserRoundCog },
+        { name: 'Ассистент', href: route('chat.chat'), icon: BotIcon },
     ];
 
     return (

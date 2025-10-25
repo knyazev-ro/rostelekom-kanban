@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\AdminUserController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PipelineController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -24,7 +26,7 @@ Route::prefix('kanban')->name('kanban.')->group(function () {
 });
 
 
-Route::prefix('board')->name('board')->group(function () {
+Route::prefix('board')->name('board.')->group(function () {
     Route::get('/', [DashboardController::class,'index'])->name('index');
 });
 
@@ -48,6 +50,15 @@ Route::prefix('users')->name('users.')->group(function () {
     Route::get('/edit/{user}', [AdminUserController::class, 'edit'])->name('edit');
     Route::post('/update/{id?}', [AdminUserController::class, 'update'])->name('update');
     Route::post('/delete/{user}', [AdminUserController::class, 'destory'])->name('delete');
+});
+
+Route::prefix('reports')->name('reports.')->group(function () {
+    Route::get('/', [ReportController::class, 'index'])->name('index');
+});
+
+Route::prefix('chat')->name('chat.')->controller(ChatController::class)->group(function(){
+    Route::get('/', 'chat')->name('chat');
+    Route::post('sendMessage', 'sendMessage')->name('send.message');
 });
 
 require __DIR__ . '/settings.php';
