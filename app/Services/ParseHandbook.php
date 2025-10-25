@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\UserRole;
 use App\Models\CostArticle;
 use App\Models\CostReflectionStatus;
 use App\Models\CostType;
@@ -146,32 +147,41 @@ class ParseHandbook
 
                     $project = Project::create([
                         'date' => $cells[0]->getValue(),
-                        'name' => $cells[2]->getValue(),
+                        'inn' => $cells[1]->getValue(),
+                        'name' => $cells[3]->getValue(),
                         'client' => $cells[2]->getValue(),
                         'description' => $cells[3]->getValue(),
                         'stage_id' => Stage::firstOrCreate(['name' => $cells[4]->getValue()], ['name' => $cells[4]->getValue(), 'pipeline_id' => $pipeline->id,  'probability' => $cells[29]->getValue() ?? '',])->id,
                         'service_id' => Service::firstOrCreate(['name' => $cells[5]->getValue(),  'service_group_id' => $serviceGroup], ['name' => $cells[5]->getValue(), 'service_group_id' => $serviceGroup])->id,
                         'payment_type_id' => PaymentType::firstOrCreate(['name' => $cells[6]->getValue()], ['name' => $cells[6]->getValue()])->id,
-                        'manager_id' => User::firstOrCreate(['last_name' => $cells[7]->getValue()], ['last_name' => $cells[7]->getValue(), 'name' => '', 'email' => fake()->email, 'password' => Hash::make('password')])->id,
+                        'manager_id' => User::firstOrCreate(['last_name' => $cells[7]->getValue()], [
+                            'last_name' => $cells[7]->getValue(), 
+                            'name' => '', 
+                            'email' => fake()->email, 
+                            'password' => Hash::make('password'),
+                            'role' => UserRole::USER->value,
+                            ])->id,
                         'segment_id' => Segment::firstOrCreate(['name' => $cells[8]->getValue()], ['name' => $cells[8]->getValue()])->id,
+                        // 
                         'eval_id' => Evaluation::firstOrCreate(['name'=> $cells[11]->getValue()], ['name'=> $cells[11]->getValue()])->id,
+                        'is_industry_solution' => $cells[12]->getValue() === 'да' ? true : false,
                         'project_number' => $cells[30]->getValue() ?? '',
                         'stage_changed_at' => $cells[0]->getValue(),
                     ]);
                     // idx 10 .. 
                     $months = [
-                        'january' => ['value' => $cells[13]->getValue() !== "" ? $cells[13]->getValue() :  0, 'status' => null],
-                        'february' => ['value' => $cells[14]->getValue() !== "" ? $cells[14]->getValue() :  0, 'status' => null],
-                        'march' => ['value' => $cells[15]->getValue() !== "" ? $cells[15]->getValue() :  0, 'status' => null],
-                        'april' => ['value' => $cells[16]->getValue() !== "" ? $cells[16]->getValue() :  0, 'status' => null],
-                        'may' => ['value' => $cells[17]->getValue() !== "" ? $cells[17]->getValue() :  0, 'status' => null],
-                        'june' => ['value' => $cells[18]->getValue() !== "" ? $cells[18]->getValue() :  0, 'status' => null],
-                        'july' => ['value' => $cells[19]->getValue() !== "" ? $cells[19]->getValue() :  0, 'status' => null],
-                        'august' => ['value' => $cells[20]->getValue() !== "" ? $cells[20]->getValue() :  0, 'status' => null],
-                        'september' => ['value' => $cells[21]->getValue() !== "" ? $cells[21]->getValue() :  0, 'status' => null],
-                        'october' => ['value' => $cells[22]->getValue() !== "" ? $cells[22]->getValue() :  0, 'status' => null],
-                        'november' => ['value' => $cells[23]->getValue() !== "" ? $cells[23]->getValue() :  0, 'status' => null],
-                        'december' => ['value' => $cells[24]->getValue() !== "" ? $cells[24]->getValue() :  0, 'status' => null],
+                        'january' => ['value' => $cells[13]->getValue() !== "" ? $cells[13]->getValue() :  0, 'status' => null, 'cost' => 0],
+                        'february' => ['value' => $cells[14]->getValue() !== "" ? $cells[14]->getValue() :  0, 'status' => null, 'cost' => 0],
+                        'march' => ['value' => $cells[15]->getValue() !== "" ? $cells[15]->getValue() :  0, 'status' => null, 'cost' => 0],
+                        'april' => ['value' => $cells[16]->getValue() !== "" ? $cells[16]->getValue() :  0, 'status' => null, 'cost' => 0],
+                        'may' => ['value' => $cells[17]->getValue() !== "" ? $cells[17]->getValue() :  0, 'status' => null, 'cost' => 0],
+                        'june' => ['value' => $cells[18]->getValue() !== "" ? $cells[18]->getValue() :  0, 'status' => null, 'cost' => 0],
+                        'july' => ['value' => $cells[19]->getValue() !== "" ? $cells[19]->getValue() :  0, 'status' => null, 'cost' => 0],
+                        'august' => ['value' => $cells[20]->getValue() !== "" ? $cells[20]->getValue() :  0, 'status' => null, 'cost' => 0],
+                        'september' => ['value' => $cells[21]->getValue() !== "" ? $cells[21]->getValue() :  0, 'status' => null, 'cost' => 0],
+                        'october' => ['value' => $cells[22]->getValue() !== "" ? $cells[22]->getValue() :  0, 'status' => null, 'cost' => 0],
+                        'november' => ['value' => $cells[23]->getValue() !== "" ? $cells[23]->getValue() :  0, 'status' => null, 'cost' => 0],
+                        'december' => ['value' => $cells[24]->getValue() !== "" ? $cells[24]->getValue() :  0, 'status' => null, 'cost' => 0],
                     ];
 
                     $dateSeries = $project->dateSeries()->create([

@@ -25,6 +25,8 @@ return new class extends Migration
             $table->string('client')->nullable();
             $table->string('project_number')->nullable();
             $table->timestamp('stage_changed_at')->nullable();
+            $table->string('inn')->nullable();
+            $table->boolean('is_industry_solution')->default(false);
             $table->timestamps();
         });
     }

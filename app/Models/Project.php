@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -27,12 +28,18 @@ class Project extends Model
         'project_number',
         'stage_changed_at',
         'eval_id',
+        'inn',
+        'is_industry_solution',
     ];
 
     protected $casts = [
         'date' => 'date',
         'stage_changed_at' => 'datetime',
     ];
+
+    public function projectStagesDurations(): HasMany {
+        return $this->hasMany(ProjectStageDuration::class, 'project_id');
+    }
 
     public function eval():BelongsTo {
         return $this->belongsTo(Evaluation::class, 'eval_id');

@@ -45,24 +45,8 @@ class DateSeries extends Model
     protected $cell = [
         'value' => 0,
         'status' => null,
+        'cost' => 0,
     ];
-
-    // protected $attributes = [
-    //     'year' => now()->year,
-    //     'january' => $this->cell,
-    //     'february' => $this->cell,
-    //     'march' => $this->cell,
-    //     'april' => $this->cell,
-    //     'may' => $this->cell,
-    //     'june' => $this->cell,
-    //     'july' => $this->cell,
-    //     'august' => $this->cell,
-    //     'september' => $this->cell,
-    //     'october' => $this->cell,
-    //     'november' => $this->cell,
-    //     'december' => $this->cell,
-    //     'total' => 0,
-    // ];
 
     public function project()
     {

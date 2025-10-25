@@ -19,6 +19,10 @@ class ProjectStageDuration extends Model
     'stayed_to' => 'datetime',   
     ];
 
+    public function stage() {
+        return $this->belongsTo(Stage::class, 'stage_id');
+    }
+
     protected static function booted() {
         static::creating(function (ProjectStageDuration $projectStageDuration) {
             $projectStageDuration->duration = $projectStageDuration->stayed_to->diffInMilliseconds(date: $projectStageDuration->stayed_from, absolute:true);

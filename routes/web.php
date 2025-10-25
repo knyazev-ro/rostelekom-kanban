@@ -28,6 +28,7 @@ Route::prefix('kanban')->name('kanban.')->group(function () {
 
 Route::prefix('board')->name('board.')->group(function () {
     Route::get('/', [DashboardController::class,'index'])->name('index');
+    Route::get('/projects-with-probs', [DashboardController::class,'getProjects'])->name('projects.probs');
 });
 
 

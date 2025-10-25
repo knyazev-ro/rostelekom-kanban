@@ -13,7 +13,7 @@ enum UserRole: string
             self::ADMIN => 'Администратор',
             self::ANALYST => 'Аналитик',
             self::USER => 'Пользователь',
-        }
+        };
     }
 
 }

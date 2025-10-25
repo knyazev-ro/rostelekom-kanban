@@ -71,6 +71,17 @@ const Index = () => {
                 />
             ),
         },
+                {
+            accessorKey: 'inn',
+            header: (
+                <ColumnHeader
+                    title="ИНН"
+                    col="inn"
+                    sortAndFilter={sortAndFilter}
+                    setSortAndFilter={setSortAndFilter}
+                />
+            ),
+        },
         {
             accessorKey: 'stage',
             header: (
