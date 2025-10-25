@@ -7,7 +7,7 @@ export default function Stage({ stage, isOver }) {
         id: stage.id,
     });
     const style = {
-        backgroundColor: isOver ? '#ff9875' : undefined,
+        backgroundColor: isOver ? '#ffede7' : undefined,
     };
 
     return (

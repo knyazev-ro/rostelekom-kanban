@@ -97,17 +97,12 @@ class ParseHandbook
                     if ($stageName) {
                         Stage::firstOrCreate(
                             ['name' => $stageName],
-                            ['name' => $stageName, 'pipeline_id' => $pipeline->id]
+                            ['name' => $stageName, 
+                            'pipeline_id' => $pipeline->id, 
+                            'probability' => $cells[7]->getValue() ?? 0.0,
+                            'order' => $idx,
+                            ]
                         );
-                    }
-
-                    // Probability (особый случай)
-                    $probValue = $cells[7]->getValue();
-                    if ($probValue) {
-                        if ($probValue === '') {
-                            $probValue = 0;
-                        }
-                        Probability::firstOrCreate(['probability' => $probValue]);
                     }
 
                     $costArticleName = $cells[8]->getValue();

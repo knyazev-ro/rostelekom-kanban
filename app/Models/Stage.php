@@ -15,6 +15,7 @@ class Stage extends Model
         'name',
         'pipeline_id',
         'order',
+        'probability'
     ];
 
     public function projects(): HasMany {

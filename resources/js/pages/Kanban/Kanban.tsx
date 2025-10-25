@@ -1,4 +1,5 @@
 import Layout from '@/components/Layout';
+import Pipelines from '@/components/Pipelines';
 import ProjectCard from '@/components/ProjectCard';
 import Stage from '@/components/Stage';
 import { DndContext, DragOverlay } from '@dnd-kit/core';
@@ -71,13 +72,7 @@ export default function Kanban({ stages: initialStages, pipelines }) {
     return (
         <Layout>
             <div className="flex flex-col gap-2 px-4 py-2">
-                <div className="flex px-4">
-                    {pipelines?.map((e) => (
-                        <div className="kanban-column text-md bg-[#7700ff] px-12 py-3 font-semibold">
-                            {e.name.toUpperCase()}
-                        </div>
-                    ))}
-                </div>
+            <Pipelines pipelines={pipelines}/>
                 <DndContext
                     onDragStart={handleDragStart}
                     onDragEnd={handleDragEnd}
