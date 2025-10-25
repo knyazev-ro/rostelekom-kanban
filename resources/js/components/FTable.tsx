@@ -11,7 +11,7 @@ const FTable = ({ columns, data, total, loading, page, perPage, onPageChange, on
     return (
         <Paper sx={{ width: '100%', height: '100%', overflow: 'hidden', p: 2 }}>
             <div className="mb-2 flex items-center justify-between">
-                {title && <h2 className="text-lg font-bold text-blue-500">{title.toUpperCase()}</h2>}
+                {title && <h2 className="text-lg font-bold text-gray-300">{title.toUpperCase()}</h2>}
                 {additionl !== undefined ? additionl() : null}
             </div>
 
@@ -25,7 +25,7 @@ const FTable = ({ columns, data, total, loading, page, perPage, onPageChange, on
                                 {headerGroup.headers.map((header) => (
                                     <TableCell
                                         key={header.id}
-                                        sx={{ py: 0.5, px: 1, fontWeight: 'bold', backgroundColor: '#1976d2', color: 'white', fontSize: '0.85rem' }}
+                                        sx={{ py: 0.5, px: 1, fontWeight: 'bold', backgroundColor: '#7700ff', color: 'white', fontSize: '0.75rem' }}
                                     >
                                         {flexRender(header.column.columnDef.header, header.getContext())}
                                     </TableCell>

@@ -72,13 +72,15 @@ export default function Kanban({ stages: initialStages, pipelines }) {
     return (
         <Layout>
             <div className="flex flex-col gap-2 px-4 py-2">
+            <div className='-ml-4'>
             <Pipelines pipelines={pipelines}/>
+            </div>
                 <DndContext
                     onDragStart={handleDragStart}
                     onDragEnd={handleDragEnd}
                     onDragOver={handleDragOver}
                 >
-                    <div className="flex h-full overflow-x-auto">
+                    <div className="flex h-full overflow-x-auto bg-gray-50">
                         {stages?.map((stage, idx) => (
                             <Stage
                                 key={stage.id}

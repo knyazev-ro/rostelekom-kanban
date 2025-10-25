@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react';
 import { ChartBarIcon, PaperClipIcon } from '@heroicons/react/16/solid';
 import { router } from '@inertiajs/react';
-import { BoxIcon, GitBranchPlus, ChevronLeft, ChevronRight } from 'lucide-react';
+import { BoxIcon, GitBranchPlus, ChevronLeft, ChevronRight, UserRoundCog } from 'lucide-react';
 
 export default function Sidebar() {
     const [collapsed, setCollapsed] = useState(localStorage.getItem('bar') === '1' ? true : false);
 
     const menuItems = [
         { name: 'Канбан', href: route('kanban.index'), icon: BoxIcon },
-        { name: 'Дешборд', href: route('kanban.index'), icon: ChartBarIcon },
-        { name: 'Отчеты', href: route('kanban.index'), icon: PaperClipIcon },
-        { name: 'Проекты', href: route('kanban.index'), icon: GitBranchPlus },
+        { name: 'Дешборд', href: route('board.index'), icon: ChartBarIcon },
+        { name: 'Отчеты', href: route('reports.index'), icon: PaperClipIcon },
+        { name: 'Проекты', href: route('projects.index'), icon: GitBranchPlus },
+        { name: 'Пользователи', href: route('users.index'), icon: UserRoundCog },
     ];
 
     return (

@@ -34,7 +34,7 @@ class Project extends Model
         'stage_changed_at' => 'datetime',
     ];
 
-    public function evals():BelongsTo {
+    public function eval():BelongsTo {
         return $this->belongsTo(Evaluation::class, 'eval_id');
     }
 
