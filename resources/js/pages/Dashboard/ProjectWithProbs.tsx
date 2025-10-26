@@ -4,35 +4,31 @@ import CellAction from '@/components/table/CellAction';
 import ColumnHeader from '@/components/table/ColumnHeader';
 import { router } from '@inertiajs/react';
 import axios from 'axios';
-import { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
-const ProjectWithProbs = () => {
+const ProjectWithProbs = React.memo(({filters}) => {
     const [data, setData] = useState([]);
     const [total, setTotal] = useState(0);
     const [perPage, setPerPage] = useState(10);
     const [page, setPage] = useState(0);
     const [loading, setLoading] = useState(true);
-
-    const [sortAndFilter, setSortAndFilter] = useState({
-        filters: [],
-        sortBy: null,
-        sortDir: 'asc',
-    });
-
-    const months = {
-        Январь: 'january',
-        Февраль: 'february',
-        Март: 'march',
-        Апрель: 'april',
-        Май: 'may',
-        Июнь: 'june',
-        Июль: 'july',
-        Август: 'august',
-        Сентябрь: 'september',
-        Октябрь: 'october',
-        Ноябрь: 'november',
-        Декабрь: 'december',
-    };
+    const months = useMemo(
+        () => ({
+            Январь: 'january',
+            Февраль: 'february',
+            Март: 'march',
+            Апрель: 'april',
+            Май: 'may',
+            Июнь: 'june',
+            Июль: 'july',
+            Август: 'august',
+            Сентябрь: 'september',
+            Октябрь: 'october',
+            Ноябрь: 'november',
+            Декабрь: 'december',
+        }),
+        []
+    );
 
     const columns = useMemo(() => {
         const base = [
@@ -45,15 +41,13 @@ const ProjectWithProbs = () => {
             {
                 accessorKey: 'name',
                 width: '150px',
-                header: (
-                    <ColumnHeader
-                        title="НАЗВАНИЕ"
-                        col="name"
-                        sortAndFilter={sortAndFilter}
-                        setSortAndFilter={setSortAndFilter}
-                    />
-                ),
+                header: 'Название'
             },
+            {
+                accessorKey: 'service.name',
+                width: '150px',
+                header: 'Сервис'
+            }
         ];
 
         const monthColumns = Object.keys(months).map((month) => ({
@@ -62,7 +56,8 @@ const ProjectWithProbs = () => {
             width: '100px',
             cell: (value) => {
                 const val = value.getValue();
-                if (!val) return <div className="text-xs text-gray-400">-</div>;
+                if (!val)
+                    return <div className="text-xs text-gray-400">-</div>;
 
                 const { income, income_p, cost, cost_p } = val;
 
@@ -86,37 +81,38 @@ const ProjectWithProbs = () => {
         }));
 
         return [...base, ...monthColumns];
-    }, [sortAndFilter]);
+    }, [months, filters]);
 
-    const fetchProjects = async () => {
+    const fetchProjects = useCallback(async () => {
         setLoading(true);
         try {
             const res = await axios.get(route('board.projects.probs'), {
-                params: { page: page + 1, perPage, ...sortAndFilter },
+                params: { page: page + 1, perPage, filters: filters},
             });
             setData(res.data.data);
             setTotal(res.data.total);
         } catch (error) {
             console.error('Ошибка загрузки данных:', error);
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
-    };
+    }, [page, perPage, filters]);
 
     useEffect(() => {
         fetchProjects();
-    }, [page, perPage, sortAndFilter]);
+    }, [fetchProjects]);
 
-    const handlePageChange = (_, newPage) => setPage(newPage);
-    const handleRowsPerPageChange = (event) => {
+    const handlePageChange = useCallback((_, newPage) => {
+        setPage(newPage);
+    }, []);
+
+    const handleRowsPerPageChange = useCallback((event) => {
         setPerPage(parseInt(event.target.value, 10));
         setPage(0);
-    };
+    }, []);
 
-    return (
-        <div>
-            <ChartProjects data={data} type={"income"}/>
-        <div className="rubik rounded-md border border-gray-200 bg-white">
-            <div className='flex w-full justify-end py-2 px-2'>
+    const legend = useMemo(
+        () => (
             <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-gray-700">
                 <div className="flex items-center gap-1">
                     <div className="h-4 w-4 border border-gray-400 bg-gray-200"></div>
@@ -135,31 +131,52 @@ const ProjectWithProbs = () => {
                     <span>Расход (вероятностный)</span>
                 </div>
             </div>
+        ),
+        []
+    );
+
+    const additional = useCallback(
+        () => (
+            <div className="flex gap-2">
+                <button
+                    onClick={() => router.get(route('projects.create'))}
+                    className="rubik cursor-pointer rounded-sm bg-[#7700ff] p-3 text-sm font-semibold text-white transition-colors hover:bg-blue-600"
+                >
+                    Новый
+                </button>
             </div>
-            <CompactTable
-                columns={columns}
-                data={data}
-                total={total}
-                loading={loading}
-                page={page}
-                perPage={perPage}
-                onPageChange={handlePageChange}
-                onRowsPerPageChange={handleRowsPerPageChange}
-                title="Проекты"
-                additionl={() => (
-                    <div className="flex gap-2">
-                        <button
-                            onClick={() => router.get(route('projects.create'))}
-                            className="rubik cursor-pointer rounded-sm bg-[#7700ff] p-3 text-sm font-semibold text-white transition-colors hover:bg-blue-600"
-                        >
-                            Новый
-                        </button>
-                    </div>
-                )}
-            />
-        </div>
+        ),
+        []
+    );
+
+    return (
+        <div>
+            <h1 className="py-4 text-2xl font-semibold text-gray-500">
+                {"ВЫРУЧКА С УЧЕТОМ ВЕРОЯТНОСТИ"}
+            </h1>
+
+            <ChartProjects data={data} type="income" />
+
+            <div className="rubik rounded-md border border-gray-200 bg-white">
+                <div className="flex w-full justify-end py-2 px-2">
+                    {legend}
+                </div>
+
+                <CompactTable
+                    columns={columns}
+                    data={data}
+                    total={total}
+                    loading={loading}
+                    page={page}
+                    perPage={perPage}
+                    onPageChange={handlePageChange}
+                    onRowsPerPageChange={handleRowsPerPageChange}
+                    title="Проекты"
+                    additionl={additional}
+                />
+            </div>
         </div>
     );
-};
+});
 
 export default ProjectWithProbs;

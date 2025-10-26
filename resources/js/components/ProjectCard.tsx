@@ -1,5 +1,6 @@
 import { useDraggable } from '@dnd-kit/core';
 import { TrashIcon } from '@heroicons/react/16/solid';
+import { router } from '@inertiajs/react';
 
 export default function ProjectCard({ project }) {
     const { attributes, listeners, setNodeRef, transform, isDragging } =
@@ -14,11 +15,12 @@ export default function ProjectCard({ project }) {
         : undefined;
 
     const handleShowProject = () => {
-        console.log(222);
+        router.get(route('projects.show', project.id));
+
     };
 
     const handleDeleteProject = () => {
-        console.log(111);
+       router.post(route('projects.delete', project.id));
     };
 
     return (

@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PipelineController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -29,6 +30,8 @@ Route::prefix('kanban')->name('kanban.')->group(function () {
 Route::prefix('board')->name('board.')->group(function () {
     Route::get('/', [DashboardController::class,'index'])->name('index');
     Route::get('/projects-with-probs', [DashboardController::class,'getProjects'])->name('projects.probs');
+    Route::get('/projects-time-stage', [DashboardController::class,'getProjectsAvgPerStageDuration'])->name('projects.time.stage');
+    Route::get('/generate-xlsx', [DashboardController::class,'generateXlsx'])->name('xlsx');
 });
 
 
@@ -41,8 +44,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::prefix('projects')->name('projects.')->group(function () {
     Route::get('/', [ProjectController::class, 'index'])->name('index');
     Route::get('/create', [ProjectController::class, 'create'])->name('create');
-    Route::get('/show', [ProjectController::class, 'show'])->name('show');
+    Route::get('/show/{project}', [ProjectController::class, 'show'])->name('show');
     Route::post('/update/{id?}', [ProjectController::class, 'update'])->name('update');
+    Route::post('/delete/{project?}', [ProjectController::class, 'destroy'])->name('delete');
+    Route::get('/logs/paginated/{project}', [ProjectController::class,'getLogs'])->name('logs.paginated');
+
 });
 
 Route::prefix('users')->name('users.')->group(function () {
@@ -51,6 +57,12 @@ Route::prefix('users')->name('users.')->group(function () {
     Route::get('/edit/{user}', [AdminUserController::class, 'edit'])->name('edit');
     Route::post('/update/{id?}', [AdminUserController::class, 'update'])->name('update');
     Route::post('/delete/{user}', [AdminUserController::class, 'destory'])->name('delete');
+    Route::get('/paginated', [AdminUserController::class,'paginatedUsers'])->name('paginated');
+});
+
+Route::prefix('services')->name('services.')->group(function () {
+    Route::get('/', [ServiceController::class, 'index'])->name('index');
+    Route::get('/paginated', [ServiceController::class, 'paginatedService'])->name('paginated');
 });
 
 Route::prefix('reports')->name('reports.')->group(function () {

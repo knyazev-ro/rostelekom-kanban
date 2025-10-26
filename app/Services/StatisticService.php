@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Models\DateSeries;
 use App\Models\Project;
 use App\Models\Stage;
+use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class StatisticService
 {
@@ -26,13 +28,11 @@ class StatisticService
     public function getStatistic(): array {
 
         $dateSeries = $this->calculateIncomeAndCostsTotal();
-        $avgTimeOnStagePerProjects = $this->getAvgTimeOnStagePerProjects();
 
         return [
             'totalProjects' => Project::count(),
             'incomeTotal' => $dateSeries['income'],
             'costsTotal' => $dateSeries['costs'],
-            'avgTimeOnStagePerProjects' => $avgTimeOnStagePerProjects,
             'stages' => Stage::all(),
         ];
     }
@@ -60,11 +60,11 @@ class StatisticService
         // 
         }
 
-    public function getAvgTimeOnStagePerProjects() {
-        $pojects = Project::with(['projectStagesDurations', 'projectStagesDurations.stage'])
+    public function getAvgTimeOnStagePerProjects(Request $request) {
+        $pojects = Project::with(['projectStagesDurations', 'projectStagesDurations.stage', 'service'])
             ->has('projectStagesDurations')
-            ->get()
-            ->map(function($project) {
+            ->paginate(10)
+            ->through(function($project) {
                 $stagesDurations = $project->projectStagesDurations->groupBy('stage_id')
                     ->map(function($durations) {
                     $totalDuration = $durations->reduce(function($carry, $item) {
@@ -80,6 +80,7 @@ class StatisticService
                 });
                 return [
                     'project_id' => $project->id,
+                    'service' => $project->service,
                     'name' => $project->name,
                     'stages_durations' => $stagesDurations->values(),
                 ];
@@ -87,7 +88,7 @@ class StatisticService
         return $pojects;
     }
 
-    public function getIncomeCostsWithProbability(Project $project) {
+    public function getIncomeCostsWithProbability(Project $project): Collection {
         $dateSeries = $project->dateSeries->only(static::$months);
         $stage = $project->stage;
         $prob = $stage->probability ?? 0;

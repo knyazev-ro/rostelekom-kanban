@@ -17,7 +17,7 @@ export default function CellAction({ value }) {
                 >
                     <MenuItem>
                         <button
-                            onClick={() => router.get(route('booking.edit', value?.row?.original?.id))}
+                            onClick={() => router.get(route('projects.show', value?.row?.original?.id))}
                             className="group flex w-full cursor-pointer items-center gap-2 rounded-xs px-3 py-1.5 hover:bg-blue-100"
                         >
                             <PencilIcon className="size-4 fill-stone-950" />
@@ -29,7 +29,7 @@ export default function CellAction({ value }) {
                     <MenuItem>
                         <button
                             onClick={() =>
-                                router.delete(route('booking.destroy', value?.row?.original?.id), {
+                                router.delete(route('projects.delete', value?.row?.original?.id), {
                                     preserveState: false,
                                 })
                             }
